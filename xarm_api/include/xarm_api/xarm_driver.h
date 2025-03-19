@@ -26,7 +26,7 @@ namespace xarm_api
     public:
         XArmDriver() {};
         ~XArmDriver();
-        void init(rclcpp::Node::SharedPtr& node, std::string &server_ip);
+        void init(rclcpp::Node::SharedPtr& node, std::string &server_ip, bool in_ros_control = false);
 
         void pub_robot_msg(xarm_msgs::msg::RobotMsg &rm_msg);
         void pub_joint_state(sensor_msgs::msg::JointState &js_msg);
@@ -38,6 +38,8 @@ namespace xarm_api
         std::string controller_error_interpreter(int err=-1);
 
         rclcpp::Logger get_logger() { return node_->get_logger(); }
+
+        sensor_msgs::msg::JointState* get_joint_states();
 
     private:
         void _report_connect_changed_callback(bool connected, bool reported);
@@ -65,6 +67,7 @@ namespace xarm_api
 
         void _init_publisher(void);
         void _init_service(void);
+        bool _firmware_version_is_ge(int major, int minor, int revision);
 
     public:
         XArmAPI *arm;
@@ -78,6 +81,8 @@ namespace xarm_api
         rclcpp::Node::SharedPtr hw_node_;
 
         int dof_;
+        int joint_states_rate_;
+        bool in_ros_control_;
         std::string report_type_;
         std::vector<std::string> joint_names_;
         sensor_msgs::msg::JointState joint_state_msg_;
