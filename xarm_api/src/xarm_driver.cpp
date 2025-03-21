@@ -267,6 +267,7 @@ namespace xarm_api
         }
 
         _init_service();
+        _init_subscription();
         _init_xarm_gripper();
         _init_bio_gripper();
     }
